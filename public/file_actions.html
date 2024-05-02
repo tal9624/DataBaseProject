@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Actions</title>
+    <link rel="stylesheet" href="file_actions.css">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="tab-container">
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='index.html';"
+      >
+        Grouping Options
+      </button>
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='word_actions.html';"
+      >
+        Word Actions
+      </button>
+      <button
+        class="tab-button active-tab text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ring-4 ring-green-200 dark:ring-green-800"
+      >
+        File Actions
+      </button>
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='statistical_data.html';"
+      >
+        Statistical Data
+      </button>
+    </div>
+
+    <div class="main-container">
+      <div id="overlay" class="overlay" onclick="closeModal()"></div>
+      <div id="modal">
+        <p id="modalMessage">Data submitted successfully!</p>
+        <button
+          onclick="closeModal()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Close
+        </button>
+      </div>
+
+      <h2 class="text-xl font-bold dark:text-white">Load Text File</h2>
+      <label for="fileInput" class="text-lg font-bold dark:text-white"
+        >Select file:</label
+      >
+      <input type="file" id="fileInput" style="display: none" />
+      <button
+        id="customFileButton"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Browse
+      </button>
+      <span id="fileNameDisplay"></span>
+      <!-- Element to display the file name -->
+      <!-- <button onclick="submitFile()">Upload File</button> -->
+
+      <h2 class="text-xl font-bold dark:text-white">Load Structured Data</h2>
+      <label for="songNameInput" class="text-lg font-bold dark:text-white"
+        >Song name:</label
+      >
+      <input type="text" id="songNameInput" placeholder="Enter song name" />
+      <label for="artistNameInput" class="text-lg font-bold dark:text-white"
+        >Artist:</label
+      >
+      <input
+        type="text"
+        id="artistNameInput"
+        placeholder="Enter artist's name"
+      />
+      <label for="releaseDateInput" class="text-lg font-bold dark:text-white"
+        >Release Date:</label
+      >
+      <input
+        type="text"
+        id="releaseDateInput"
+        placeholder="Enter release date"
+      />
+      <label for="albumNameInput" class="text-lg font-bold dark:text-white"
+        >Album Name:</label
+      >
+      <input type="text" id="albumNameInput" placeholder="Enter album name" />
+      <label for="writerNameInput" class="text-lg font-bold dark:text-white"
+        >Writer Name:</label
+      >
+      <input
+        type="text"
+        id="writerNameInput"
+        placeholder="Enter writer's name"
+      />
+      <label for="source" class="text-lg font-bold dark:text-white"
+        >Source:</label
+      >
+      <input type="text" id="source" placeholder="Enter source" />
+      <label for="youtubeLink" class="text-lg font-bold dark:text-white"
+        >YouTube Link:</label
+      >
+      <input type="text" id="youtubeLink" placeholder="Enter YouTube link" />
+      <input type="text" id="songText" hidden />
+      <input type="text" id="fileName" hidden />
+      <button
+        id="postSongButton"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Submit
+      </button>
+
+      <h2 class="text-xl font-bold dark:text-white">Show Text File</h2>
+      <label for="textFileWords" class="text-lg font-bold dark:text-white">
+        Enter words separated by commas:
+      </label>
+      <input type="text" id="textFileWords" placeholder="Enter words" />
+
+      <label for="songNameInput2" class="text-lg font-bold dark:text-white">
+        Enter Song name:
+      </label>
+      <input type="text" id="songNameInput2" placeholder="Enter song name" />
+
+      <label for="artistNameInput2" class="text-lg font-bold dark:text-white">
+        Enter Artist name:
+      </label>
+      <input
+        type="text"
+        id="artistNameInput2"
+        placeholder="Enter artist's name"
+      />
+
+      <label for="releaseDateInput2" class="text-lg font-bold dark:text-white">
+        Enter Release Date:
+      </label>
+      <input
+        type="text"
+        id="releaseDateInput2"
+        placeholder="Enter release date"
+      />
+
+      <label for="albumNameInput2" class="text-lg font-bold dark:text-white">
+        Enter Album Name:
+      </label>
+      <input type="text" id="albumNameInput2" placeholder="Enter album name" />
+
+      <label for="writerNameInput2" class="text-lg font-bold dark:text-white">
+        Enter Writer name:
+      </label>
+      <input
+        type="text"
+        id="writerNameInput2"
+        placeholder="Enter writer's name"
+      />
+
+      <label for="source2" class="text-lg font-bold dark:text-white">
+        Enter Source:
+      </label>
+      <input type="text" id="source2" placeholder="Enter source" />
+
+      <button
+        id="submitShowTextFile"
+        onclick="submitShowTextFile()"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Search Song
+      </button>
+
+      <h2 class="text-xl font-bold dark:text-white">
+        Load Bulk Data from XML
+      </h2>
+      <input type="file" id="bulkInput" style="display: none" />
+      <button
+        id="bulkInsertButton"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Browse
+      </button>
+      <button
+        id="uploadBulk"
+        style="display: none"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Insert Bulk
+      </button>
+      <span id="bulkFileNameDisplay"></span>
+    </div>
+
+    <div id="overlay" class="overlay" onclick="closeModal()"></div>
+    <div id="modal">
+      <p id="modalMessage">Data submitted successfully!</p>
+      <!-- This line is important -->
+      <button
+        onclick="closeModal()"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 ..."
+      >
+        Close
+      </button>
+    </div>
+
+    <script src="file_actions.js"></script>
+
+    <script type="module" src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistical Data</title>
+    <link rel="stylesheet" href="statistical_data.css">
+    <style>
+
+    </style>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="tab-container">
+      <div>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='index.html';"
+        >
+          Grouping Options
+        </button>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='word_actions.html';"
+        >
+          Word Actions
+        </button>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='file_actions.html';"
+        >
+          File Actions
+        </button>
+        <button
+          class="tab-button active-tab text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ring-4 ring-green-200 dark:ring-green-800"
+          onclick="window.location.href='statistical_data.html';"
+        >
+          Statistical Data
+        </button>
+      </div>
+    </div>
+  </body>
+  <div  class="centered-text" id ="sum-of-words"></div>
+  <div id="chart-container"></div>
+  <hr />
+  <div id="chart-container2"></div>
+  <hr />
+  <div id="chart-container3"></div>
+  <div id="chart-container4"></div>
+  <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="statistical_data.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</html>

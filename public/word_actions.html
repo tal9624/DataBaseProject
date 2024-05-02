@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Actions</title>
+    <link rel="stylesheet" href="word_actions.css">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Placeholder for displaying the paragraph texts -->
+    <div id="paragraphDisplay" class="paragraph-display">
+      <div class="paragraph-content"></div>
+      <button
+        onclick="closeParagraphDisplay()"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      >
+        Close
+      </button>
+    </div>
+
+    <div class="tab-container">
+      <div>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='index.html';"
+        >
+          Grouping Options
+        </button>
+        <button
+          class="tab-button active-tab text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ring-4 ring-green-200 dark:ring-green-800"
+        >
+          Word Actions
+        </button>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='file_actions.html';"
+        >
+          File Actions
+        </button>
+        <button
+          class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="window.location.href='statistical_data.html';"
+        >
+          Statistical Data
+        </button>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div id="overlay" class="overlay" onclick="closeModal()"></div>
+      <div id="modal">
+        <p id="modalMessage">Data submitted successfully!</p>
+        <button
+          onclick="closeModal()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Close
+        </button>
+      </div>
+      <div id="overlayTable" class="overlayTable" onclick="closeModal()"></div>
+      <div id="modalTable">
+        <p id="modalMessage">Choose word to show reference!</p>
+        <button
+          onclick="closeModal()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Close
+        </button>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100"
+          >
+            <thead
+              class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3">Song Name</th>
+                <th scope="col" class="px-6 py-3 bg-blue-500">Word</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="modalTableForIndexes">
+        <p id="modalMessageForIndexes"></p>
+        <button
+          onclick="closeModal()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Close
+        </button>
+        <p id="modalMessage">Type 1 indexes!</p>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100"
+          >
+            <thead
+              class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3">Song Name</th>
+                <th scope="col" class="px-6 py-3">Row</th>
+                <th scope="col" class="px-6 py-3">Column</th>
+              </tr>
+            </thead>
+            <tbody id="modalTableBodyForIndexes"></tbody>
+          </table>
+        </div>
+        Type 2 indexes!
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100"
+          >
+            <thead
+              class="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3">Song Name</th>
+                <th scope="col" class="px-6 py-3">Paragraph Num</th>
+                <th scope="col" class="px-6 py-3">Row in Paragraph Num</th>
+              </tr>
+            </thead>
+            <tbody id="modalTableBodyForRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="wordActions" class="tab-content" style="display: block">
+        <h2 class="text-xl font-bold dark:text-white">
+          Show all words in text
+        </h2>
+        <label for="songSelection" class="text-lg font-bold dark:text-white"
+          >Choose filter songs separated by commas :</label
+        >
+        <input type="text" id="songSelection" placeholder="Enter song name" />
+        <button
+          onclick="ShowAllWordsInText()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Show me!
+        </button>
+
+        <h2 class="text-xl font-bold dark:text-white">Show index of a word</h2>
+        <label for="wordIndex" class="text-lg font-bold dark:text-white"
+          >Enter word:</label
+        >
+        <!-- onclick="showIndexOfAWord();" -->
+        <input type="text" id="wordIndex" placeholder="Enter word" />
+        <button
+          onclick="handleBothFunctions();"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Show index
+        </button>
+
+        <h2 class="text-xl font-bold dark:text-white">Locate word by index</h2>
+        <label for="fileName" class="text-lg font-bold dark:text-white"
+          >Choose Song Name:</label
+        >
+        <input type="text" id="fileName" placeholder="Enter song name" />
+        <label for="rowNumber" class="text-lg font-bold dark:text-white"
+          >Row:</label
+        >
+        <input type="text" id="rowNumber" placeholder="Enter row number" />
+        <label for="colNumber" class="text-lg font-bold dark:text-white"
+          >Column:</label
+        >
+        <input type="text" id="colNumber" placeholder="Enter column number" />
+        <button
+          onclick="submitLocateByIndex()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Find Word
+        </button>
+      </div>
+    </div>
+
+    <script src="word_actions.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

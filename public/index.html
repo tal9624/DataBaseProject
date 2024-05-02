@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tab Navigation</title>
+    
+  
+    <link rel="stylesheet" href="styleforindex.css">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="modal">
+      <div id="modalMessage"></div>
+      <button
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="closeModal()"
+      >
+        Close
+      </button>
+    </div>
+    <div class="relative overflow-x-auto">
+      <div
+      class="hidden"
+      id="indexesTableContainer"
+     
+    ><div id="groupNameDisplay" class="px-6 py-3 text-gray-700">
+      
+    </div>
+    <button class ="abc" on-click="closeModal()">&times;</button>
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+       
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                    Song Name
+                  </th>
+                  <th scope="word" class="px-6 py-3">
+                    Word
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Row
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Column
+                  </th>
+              </tr>
+          </thead>
+          <tbody id="tableForGroupWordIndexes"></tbody>
+          </tbody>
+      </table>
+      <button
+      class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
+      onclick="closeModal()"
+    >
+      Close
+    </button>
+    </div>  
+  </div>
+
+    <div class="tab-container">
+      <button
+        class="tab-button active-tab text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ring-4 ring-green-200 dark:ring-green-800"
+        onclick="openTab('groupingOptions')"
+      >
+        Grouping Options
+      </button>
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='word_actions.html';"
+      >
+        Word Actions
+      </button>
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='file_actions.html'"
+      >
+        File Actions
+      </button>
+      <button
+        class="tab-button text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="window.location.href='statistical_data.html';"
+      >
+        Statistical Data
+      </button>
+    </div>
+
+    <div class="main-container">
+      <div id="overlay" class="overlay" onclick="closeModal()"></div>
+      <div id="modal">
+        <p id="modalMessage">Data submitted successfully!</p>
+        <button
+          onclick="closeModal()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Close
+        </button>
+      </div>
+
+      <div id="groupingOptions" class="tab-content">
+        <label for="createGroup" class="text-lg font-bold dark:text-white"
+          >Enter new group name:</label
+        >
+        <input type="text" id="createGroup" placeholder="New group name" />
+        <button
+          onclick="submitCreateGroup()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Submit
+        </button>
+
+        <label for="deleteGroup" class="text-lg font-bold dark:text-white"
+          >Enter group name to delete:</label
+        >
+        <input
+          type="text"
+          id="deleteGroup"
+          placeholder="Group name to delete"
+        />
+        <button
+          onclick="submitDeleteGroup()"
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >
+          Submit
+        </button>
+        <div>
+          <button
+            class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            onclick="showSongsModal()"
+          >
+            Add Word to a Group
+          </button>
+        </div>
+      </div>
+      <label for="ChooseGroupButton" class="text-lg font-bold dark:text-white"
+        >Choose a Group for showing word indexes:</label
+      >
+      <button
+        id="ChooseGroupButton"
+        class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onclick="showGroupSelectorModal()"
+      >
+        Choose Group
+      </button>
+      <div style="display: flex; justify-content: center;">
+        <button
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="showPhraseModal()"
+        >
+          Add Phrase
+        </button>
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <button
+          class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          onclick="showSearchPhraseModal()"
+        >
+          Search Phrase
+        </button>
+      </div>
+    </div>
+
+    <script src="jsforindex.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>
