@@ -574,4 +574,42 @@ function exportXML() {
       .catch(error => console.error('Error downloading the XML file:', error));
 }
 
+function triggerFileInput() {
+  document.getElementById('fileInput').click();  // Simulate click on the hidden file input
+}
+
+function importXML() {
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];  // Get the file from the file input
+
+  if (file) {
+      const formData = new FormData();
+      formData.append('xmlFile', file);
+
+      fetch('/importXML', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+          console.log('Success:', data);
+          alert('File uploaded and data imported successfully!');
+      })
+      .catch((error) => {
+          console.error('Error:', error);
+          alert('Failed to upload and import data. ' + error.message);
+      });
+  } else {
+      alert('Please select a file to upload.');
+  }
+}
+
+
+
+
 

@@ -1,12 +1,17 @@
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { parseString } from 'xml2js';
+import { promises as fs } from 'fs';
+import xml2js from 'xml2js';
 
 import {
   getWordsMap,
   // splitToParagraphs,
   // isLyricsContainAllWords,
   convertDataToXML,
+  processSongs, processWordsInSongs,
+  processWordCount,processGroups,processWordGroups,
+  processPhrases,processPhrasesAtSongs
 } from "./util/index.js";
 import convert from "xml-js";
 
@@ -749,6 +754,37 @@ export default class SqlUtil {
     }
 };
 
+// Asynchronously process and import XML data into the database
+importXML = async (req, res) => {
+  // Ensure there is a file part in the request
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+  const filePath = req.file.path;
+  console.log(`File uploaded at ${filePath}`);
+  try {
+    const filePath = req.file.path;
+    const data = await fs.readFile(filePath);
+    let result = await xml2js.parseStringPromise(data);
+    
+    // Assuming your XML structure follows the output format of your export function
+    await processSongs(result.Database.Songs[0].Song, this.db);
+    await processWordsInSongs(result.Database.WordsInSongs[0].WordInSong,this.db);
+    await processWordCount(result.Database.WordCounts[0].WordCount,this.db);
+    await processGroups(result.Database.Groups[0].Group,this.db);
+    await processWordGroups(result.Database.WordGroups[0].WordGroup,this.db);
+    await processPhrases(result.Database.Phrases[0].Phrase,this.db);
+    await processPhrasesAtSongs(result.Database.PhrasesAtSongs[0].PhraseAtSong,this.db);
+
+    // Clean up the uploaded file after processing
+    await fs.unlink(filePath);
+
+    res.json({ message: 'XML data imported successfully!' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to process XML file.', details: error.message });
+  }
+};
 
 
 }

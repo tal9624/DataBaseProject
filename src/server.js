@@ -1,8 +1,12 @@
 import express from "express";
 import SqlUtil from "./lib/SqlUtil.js";
+import multer from 'multer';
+
 
 const DB_PATH = "./src/db/songs_database.db";
 const PORT = 3000;
+const upload = multer({ dest: 'uploads/' });
+
 
 const app = express();
 const sqlUtil = new SqlUtil(DB_PATH);
@@ -35,6 +39,7 @@ app.post("/showRowInParagraph",sqlUtil.showRowInParagraph);
 app.post("/IndexesForGroupWords",sqlUtil.IndexesForGroupWords);
 app.post("/addPhrase",sqlUtil.addPhrase);
 app.post("/showPhrase",sqlUtil.showPhrase);
+app.post('/importXML', upload.single('xmlFile'), sqlUtil.importXML);
 
 
 app.listen(PORT, () => {
