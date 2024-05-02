@@ -19,6 +19,7 @@ app.get("/getAllWordsAndGroups", sqlUtil.getAllWordsAndGroups);
 app.get("/getLinesInParagraphStats", sqlUtil.getLinesInParagraphStats);
 app.get("/getCountOfWordLengths", sqlUtil.getCountOfWordLengths);
 app.get("/getCountOfAllWords", sqlUtil.getCountOfAllWords);
+app.get("/exportXML", sqlUtil.exportXML);
 
 app.post("/getSongByStructData", sqlUtil.getSongByStructData);
 app.post("/postSong", sqlUtil.postSong);

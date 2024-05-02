@@ -1,9 +1,12 @@
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
+import { parseString } from 'xml2js';
+
 import {
   getWordsMap,
-  splitToParagraphs,
-  isLyricsContainAllWords,
+  // splitToParagraphs,
+  // isLyricsContainAllWords,
+  convertDataToXML,
 } from "./util/index.js";
 import convert from "xml-js";
 
@@ -21,20 +24,35 @@ export default class SqlUtil {
   }
 
   bulkPost = async (req, res) => {
-    const body = req.body;
-    const xml = body.xml;
+    const xml = req.body.xml;
 
-    const content = convert.xml2json(xml, { compact: true, spaces: 4 });
-    const songs = JSON.parse(content).song._text;
+    parseString(xml, { explicitArray: false, trim: true }, async (err, result) => {
+      if (err) {
+        console.error('Error parsing XML:', err);
+        return res.status(500).json({ error: 'Failed to parse XML' });
+      }
 
-    for (const song of JSON.parse(songs)) {
-      await this.postSong(
-        { body: { ...song, dateOfWriting: new Date().toISOString() } },
-        res
-      );
-    }
-    console.log("Bulk upload finished");
+      try {
+        // Access the JSON string inside the <song> tag
+        const jsonString = result.song;
+        // Parse the JSON string into an array of songs
+        const songs = JSON.parse(jsonString);
+
+        for (const song of songs) {
+          await this.postSong(
+            { body: { ...song, dateOfWriting: new Date().toISOString() } },
+            res
+          );
+        }
+        console.log("Bulk upload finished");
+        res.status(200).send('Songs uploaded successfully');
+      } catch (error) {
+        console.error('Error processing songs:', error);
+        res.status(500).json({ error: 'Failed to process songs' });
+      }
+    });
   };
+
 
   postSong = async (req, res) => {
     try {
@@ -165,26 +183,6 @@ export default class SqlUtil {
       console.error("Transaction failed:", error);
     }
   };
-
-  // insertParagraphs = async (req, res) => {
-  //   const paragraphs = splitToParagraphs(req.body.lyrics);
-  //   let songName = req.body.songName;
-  //   const filePath = req.body.filePath;
-  //   if (songName == "") {
-  //     songName = filePath;
-  //   }
-
-  //   for (const [paragraphNumber, paragraphText] of paragraphs.entries()) {
-  //     const numOfRows = (paragraphText.match(/\n/g) || []).length + 1;
-  //     await this.db.run(
-  //       `INSERT INTO paragraph 
-  //                   (song_name, paragraph_number, paragraph_text,num_of_rows) 
-  //                   VALUES (?,?,?,?);`,
-  //       [songName, paragraphNumber, paragraphText, numOfRows]
-  //     );
-  //   }
-  // };
-
   getWordCountStats = async (req, res) => {
     const data = await this.db.all(`SELECT word, counter
             FROM word_count
@@ -199,16 +197,6 @@ export default class SqlUtil {
     res.json(data);
   };
 
-  // getSongLyrics = async (req, res) => {
-  //   const songName = req.body.songName;
-  //   const r = await this.db.all(
-  //     `SELECT paragraph_text, paragraph_number FROM paragraph WHERE song_name = ?`,
-  //     [songName]
-  //   );
-
-  //   const data = r.map((l) => l.paragraph_text + "\n\n").join("");
-  //   res.json(data);
-  // };
 
   getAllSongAndLyrics = async (req, res) => {
     // Fetch all words, ordered by song, row, and column
@@ -572,19 +560,6 @@ export default class SqlUtil {
         `,
       [songName]
     );
-    // const paragraph = await this.db.all(
-    //   `
-    //   SELECT *
-    //   FROM paragraph
-    //   WHERE paragraph_text LIKE '%' || ? || '%'
-
-    // `,
-    //   [phrase]
-    // );
-    // if (paragraph.length === 0) {
-    //   res.json({ message: "no such phrase" });
-    //   return;
-    // }
     // Insert the phrase into the phrases table
     // Compile words into paragraphs using row changes as paragraph breaks
     let currentRow = 0;
@@ -723,11 +698,6 @@ export default class SqlUtil {
 };
 
 
-
-
-
-  
-
   getLinesInParagraphStats = async (req, res) => {
     const r = await this.db.all(
       `
@@ -754,4 +724,31 @@ export default class SqlUtil {
     );
     res.json(r);
   };
+
+  exportXML = async (req, res) => {
+    try {
+        // Query data from each table
+        const songs = await this.db.all(`SELECT * FROM songs`);
+        const wordsInSongs = await this.db.all(`SELECT * FROM words_in_songs`);
+        const wordCounts = await this.db.all(`SELECT * FROM word_count`);
+        const wordGroups = await this.db.all(`SELECT * FROM word_groups`);
+        const groups = await this.db.all(`SELECT * FROM groups`);
+        const phrases = await this.db.all(`SELECT * FROM phrases`);
+        const phrasesAtSongs = await this.db.all(`SELECT * FROM phrases_at_songs`);
+
+        // Convert the data to XML
+        const xmlData = convertDataToXML({ songs, wordsInSongs, wordCounts, wordGroups, groups, phrases, phrasesAtSongs });
+
+        // Set headers to tell the browser to download the file
+        res.header("Content-Type", "application/xml");
+        res.header("Content-Disposition", "attachment; filename=data.xml");
+        res.send(xmlData);
+    } catch (error) {
+        console.error('Failed to export XML:', error);
+        res.status(500).send("Failed to export data.");
+    }
+};
+
+
+
 }

@@ -557,3 +557,21 @@ function getParameterByName(name, url = window.location.href) {
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+function exportXML() {
+  fetch('/exportXML')
+      .then(response => response.blob())  // Convert the response to a Blob (binary large object)
+      .then(blob => {
+          const url = window.URL.createObjectURL(blob);  // Create a URL for the blob
+          const a = document.createElement('a');  // Create a download link
+          a.href = url;
+          a.download = "export.xml";  // Set the filename
+          a.style.display = 'none';  // Ensure the element doesn't show up
+          document.body.appendChild(a);  // Append the link to the document
+          a.click();  // Simulate a click on the link to start download
+          a.remove();  // Remove the link immediately
+          window.URL.revokeObjectURL(url);  // Clean up the URL object
+      })
+      .catch(error => console.error('Error downloading the XML file:', error));
+}
+
+
