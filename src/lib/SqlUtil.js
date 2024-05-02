@@ -41,7 +41,6 @@ export default class SqlUtil {
       const isExsit = await this.insertSong(req, res);
       if (!isExsit) {
         await this.insertWords(req, res);
-        await this.insertParagraphs(req, res);
         console.log(
           `insert ${req.body.artistName} - ${req.body.songName}, finished`
         );

@@ -1,5 +1,4 @@
 -- Drop existing tables if they exist
-DROP TABLE paragraph;
 DROP TABLE  words_in_songs;
 DROP TABLE  word_count;
 DROP TABLE songs;
@@ -22,15 +21,6 @@ CREATE TABLE songs (
     youtube_path VARCHAR(255)
 );
 
-
-CREATE TABLE paragraph (
-    song_name VARCHAR(255),
-    paragraph_number INTEGER,
-    paragraph_text TEXT,
-    num_of_rows integer,
-    PRIMARY KEY (song_name, paragraph_number),
-    FOREIGN KEY (song_name) REFERENCES songs (song_name)
-);
 
 
 CREATE TABLE words_in_songs (
