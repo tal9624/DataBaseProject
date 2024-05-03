@@ -10,7 +10,7 @@ import {
   // isLyricsContainAllWords,
   convertDataToXML,
   processSongs, processWordsInSongs,
-  processWordCount,processGroups,processWordGroups,
+  processGroups,processWordGroups,
   processPhrases,processPhrasesAtSongs
 } from "./util/index.js";
 import convert from "xml-js";
@@ -141,7 +141,7 @@ export default class SqlUtil {
       await this.db.run("BEGIN"); // Start a transaction
 
       for (const [word, details] of Object.entries(wordsMap)) {
-        const wordCount = details.count;
+        // const wordCount = details.count;
         const occurrences = details.indexes;
         const wordLength = word.length;
 
@@ -156,13 +156,12 @@ export default class SqlUtil {
         for (const index of occurrences.entries()) {
           currentMaxId += 1; // Increment ID for each new row
           const result = await this.db.run(
-            `INSERT INTO words_in_songs (word_serial_id, word, song_name, word_count, row, column, column_end)
-                     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO words_in_songs (word_serial_id, word, song_name, row, column, column_end)
+                     VALUES (?, ?, ?, ?, ?, ?)`,
             [
               currentMaxId,
               word,
               songName,
-              wordCount,
               index[1][0],
               index[1][1],
               index[1][2],
@@ -172,14 +171,14 @@ export default class SqlUtil {
         }
 
         // Insert into word_count with the last used ID
-        if (lastWordSerialId) {
-          await this.db.run(
-            `INSERT INTO word_count (word_serial_id, word, counter, word_length)
-                     VALUES (?, ?, ?, ?)
-                     ON CONFLICT(word) DO UPDATE SET counter = counter + ?`,
-            [lastWordSerialId, word, wordCount, wordLength, wordCount]
-          );
-        }
+        // if (lastWordSerialId) {
+        //   await this.db.run(
+        //     `INSERT INTO word_count (word_serial_id, word, counter, word_length)
+        //              VALUES (?, ?, ?, ?)
+        //              ON CONFLICT(word) DO UPDATE SET counter = counter + ?`,
+        //     [lastWordSerialId, word, wordCount, wordLength, wordCount]
+        //   );
+        // }
       }
 
       await this.db.run("COMMIT"); // Commit the transaction
@@ -188,13 +187,29 @@ export default class SqlUtil {
       console.error("Transaction failed:", error);
     }
   };
+  // getWordCountStats = async (req, res) => {
+  //   const data = await this.db.all(`SELECT word, counter
+  //           FROM word_count
+  //           ORDER BY counter DESC
+  //           LIMIT 50;`);
+  //   res.json(data);
+  // };
+
   getWordCountStats = async (req, res) => {
-    const data = await this.db.all(`SELECT word, counter
-            FROM word_count
+    try {
+        const data = await this.db.all(`
+            SELECT word, count(word) AS counter
+            FROM words_in_songs
+            GROUP BY word
             ORDER BY counter DESC
-            LIMIT 50;`);
-    res.json(data);
-  };
+            LIMIT 50;
+        `);
+        res.json(data);
+    } catch (err) {
+        console.error("Error retrieving word count stats:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 
   getAllSongNames = async (req, res) => {
     const r = await this.db.all(`SELECT song_name FROM songs`);
@@ -715,34 +730,65 @@ export default class SqlUtil {
   };
 
   getCountOfWordLengths = async (req, res) => {
-    const r = await this.db.all(
-      `SELECT sum(counter) AS total_count,word_length
-       FROM word_count
-       GROUP BY word_length
-       ORDER BY word_length;`
-    );
-    res.json(r);
-  };
+    try {
+        const data = await this.db.all(`
+            SELECT LENGTH(word) AS word_length, COUNT(word) AS total_count
+            FROM words_in_songs
+            GROUP BY LENGTH(word)
+            ORDER BY LENGTH(word);
+        `);
+        res.json(data);
+    } catch (err) {
+        console.error("Error retrieving word length counts:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+  // getCountOfWordLengths = async (req, res) => {
+  //   const r = await this.db.all(
+  //     `SELECT sum(counter) AS total_count,word_length
+  //      FROM word_count
+  //      GROUP BY word_length
+  //      ORDER BY word_length;`
+  //   );
+  //   res.json(r);
+  // };
+
+  
+  // getCountOfAllWords = async (req, res) => {
+  //   const r = await this.db.all(
+  //     `SELECT sum(counter) AS words_sum from word_count;`
+  //   );
+  //   res.json(r);
+  // };
+
   getCountOfAllWords = async (req, res) => {
-    const r = await this.db.all(
-      `SELECT sum(counter) AS words_sum from word_count;`
-    );
-    res.json(r);
-  };
+    try {
+        const data = await this.db.get(`
+            SELECT COUNT(*) AS words_sum
+            FROM words_in_songs;
+        `);
+        res.json(data);
+    } catch (err) {
+        console.error("Error retrieving total word count:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 
   exportXML = async (req, res) => {
     try {
         // Query data from each table
         const songs = await this.db.all(`SELECT * FROM songs`);
         const wordsInSongs = await this.db.all(`SELECT * FROM words_in_songs`);
-        const wordCounts = await this.db.all(`SELECT * FROM word_count`);
+        // const wordCounts = await this.db.all(`SELECT * FROM word_count`);
         const wordGroups = await this.db.all(`SELECT * FROM word_groups`);
         const groups = await this.db.all(`SELECT * FROM groups`);
         const phrases = await this.db.all(`SELECT * FROM phrases`);
         const phrasesAtSongs = await this.db.all(`SELECT * FROM phrases_at_songs`);
 
         // Convert the data to XML
-        const xmlData = convertDataToXML({ songs, wordsInSongs, wordCounts, wordGroups, groups, phrases, phrasesAtSongs });
+        const xmlData = convertDataToXML({ songs, wordsInSongs, wordGroups, groups, phrases, phrasesAtSongs });
 
         // Set headers to tell the browser to download the file
         res.header("Content-Type", "application/xml");
@@ -770,7 +816,7 @@ importXML = async (req, res) => {
     // Assuming your XML structure follows the output format of your export function
     await processSongs(result.Database.Songs[0].Song, this.db);
     await processWordsInSongs(result.Database.WordsInSongs[0].WordInSong,this.db);
-    await processWordCount(result.Database.WordCounts[0].WordCount,this.db);
+    // await processWordCount(result.Database.WordCounts[0].WordCount,this.db);
     await processGroups(result.Database.Groups[0].Group,this.db);
     await processWordGroups(result.Database.WordGroups[0].WordGroup,this.db);
     await processPhrases(result.Database.Phrases[0].Phrase,this.db);

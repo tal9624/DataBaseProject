@@ -40,13 +40,12 @@ export async function processSongs(songs, db) {
 
 export async function processWordsInSongs(wordsInSongs, db) {
     try {
-        const insert = await db.prepare(`INSERT INTO words_in_songs (word_serial_id, song_name, word, word_count, row, column, column_end) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+        const insert = await db.prepare(`INSERT INTO words_in_songs (word_serial_id, song_name, word, row, column, column_end) VALUES (?, ?, ?, ?, ?, ?)`);
 
         for (const wordInSong of wordsInSongs) {
             const WordSerialId = wordInSong.WordSerialId[0];
             const SongName = wordInSong.SongName[0];
             const Word = wordInSong.Word[0];
-            const WordCount = wordInSong.WordCount[0];
             const Row = wordInSong.Row[0];
             const Column = wordInSong.Column[0];
             const ColumnEnd = wordInSong.ColumnEnd[0];
@@ -55,7 +54,6 @@ export async function processWordsInSongs(wordsInSongs, db) {
                 WordSerialId,
                 SongName,
                 Word,
-                WordCount,
                 Row,
                 Column,
                 ColumnEnd
@@ -70,30 +68,30 @@ export async function processWordsInSongs(wordsInSongs, db) {
 }
 
 
-export async function processWordCount(wordCounts, db) {
-    try {
-        const insert = await db.prepare(`INSERT INTO word_count (word_serial_id, word, counter, word_length) VALUES (?, ?, ?, ?)`);
+// export async function processWordCount(wordCounts, db) {
+//     try {
+//         const insert = await db.prepare(`INSERT INTO word_count (word_serial_id, word, counter, word_length) VALUES (?, ?, ?, ?)`);
 
-        for (const wordCount of wordCounts) {
-            const WordSerialId = wordCount.WordSerialId[0];
-            const Word = wordCount.Word[0];
-            const Counter = wordCount.Counter[0];
-            const WordLength = wordCount.WordLength[0];
+//         for (const wordCount of wordCounts) {
+//             const WordSerialId = wordCount.WordSerialId[0];
+//             const Word = wordCount.Word[0];
+//             const Counter = wordCount.Counter[0];
+//             const WordLength = wordCount.WordLength[0];
 
-            await insert.run(
-                WordSerialId,
-                Word,
-                Counter,
-                WordLength
-            );
-        }
+//             await insert.run(
+//                 WordSerialId,
+//                 Word,
+//                 Counter,
+//                 WordLength
+//             );
+//         }
 
-        await insert.finalize();
-    } catch (error) {
-        console.error('Error:', error);
-        throw new Error('Failed to insert word counts into the database.');
-    }
-}
+//         await insert.finalize();
+//     } catch (error) {
+//         console.error('Error:', error);
+//         throw new Error('Failed to insert word counts into the database.');
+//     }
+// }
 
 
 export async function processGroups(groups, db) {

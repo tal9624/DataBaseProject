@@ -27,7 +27,7 @@ CREATE TABLE words_in_songs (
     word_serial_id INTEGER PRIMARY KEY,
     song_name VARCHAR(255),
     word VARCHAR(255),
-    word_count INTEGER,
+    -- word_count INTEGER,
     row INTEGER,
     column INTEGER,
     column_end INTEGER,
@@ -36,13 +36,13 @@ CREATE TABLE words_in_songs (
 );
 
 
-CREATE TABLE word_count (
-    word_serial_id INTEGER PRIMARY KEY,
-    word VARCHAR(255) UNIQUE,
-    counter INTEGER,
-    word_length INTEGER,  
-    FOREIGN KEY (word_serial_id) REFERENCES words_in_songs (word_serial_id)
-);
+-- CREATE TABLE word_count (
+--     word_serial_id INTEGER PRIMARY KEY,
+--     word VARCHAR(255) UNIQUE,
+--     counter INTEGER,
+--     word_length INTEGER,  
+--     FOREIGN KEY (word_serial_id) REFERENCES words_in_songs (word_serial_id)
+-- );
 
 
 

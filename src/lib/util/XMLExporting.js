@@ -27,7 +27,6 @@ export function convertDataToXML(data) {
                   <WordSerialId>${word.word_serial_id}</WordSerialId>
                   <SongName>${word.song_name}</SongName>
                   <Word>${word.word}</Word>
-                  <WordCount>${word.word_count}</WordCount>
                   <Row>${word.row}</Row>
                   <Column>${word.column}</Column>
                   <ColumnEnd>${word.column_end}</ColumnEnd>
@@ -36,16 +35,16 @@ export function convertDataToXML(data) {
   xml += '</WordsInSongs>';
 
   // Word Count
-  xml += '<WordCounts>';
-  data.wordCounts.forEach(wordCount => {
-      xml += `<WordCount>
-                  <WordSerialId>${wordCount.word_serial_id}</WordSerialId>
-                  <Word>${wordCount.word}</Word>
-                  <Counter>${wordCount.counter}</Counter>
-                  <WordLength>${wordCount.word_length}</WordLength>
-              </WordCount>`;
-  });
-  xml += '</WordCounts>';
+//   xml += '<WordCounts>';
+//   data.wordCounts.forEach(wordCount => {
+//       xml += `<WordCount>
+//                   <WordSerialId>${wordCount.word_serial_id}</WordSerialId>
+//                   <Word>${wordCount.word}</Word>
+//                   <Counter>${wordCount.counter}</Counter>
+//                   <WordLength>${wordCount.word_length}</WordLength>
+//               </WordCount>`;
+//   });
+//   xml += '</WordCounts>';
 
   // Groups
   xml += '<Groups>';
