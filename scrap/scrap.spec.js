@@ -20,11 +20,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // const url = "https://www.letssingit.com/pink-floyd-album-lyrics-the-dark-side-of-the-moon-sz2m2w";
- const url = "https://www.letssingit.com/three-days-grace-album-lyrics-human-6m56p7";
+//  const url = "https://www.letssingit.com/three-days-grace-album-lyrics-human-6m56p7";
  // const url = "https://www.letssingit.com/metallica-album-lyrics-reload-wb4wlb";
 //  const url = "https://www.letssingit.com/pink-floyd-album-lyrics-echoes-the-best-of-pink-floyd-8q9fk1";
 // const url = "https://www.letssingit.com/green-day-album-lyrics-nimrod-6g6pkh";
 // const url = "https://www.letssingit.com/camel-album-lyrics-rajaz-fvgzgp";
+// const url = "https://www.letssingit.com/shakira-album-lyrics-laundry-service-ns43np";
+const url = "https://www.letssingit.com/europe-album-lyrics-the-final-countdown-x1n1kr";
 
 const albumName = getAlbumFromUrl(url);
 const artistName = getArtistFromUrl(url);

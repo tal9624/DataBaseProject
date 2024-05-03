@@ -8,25 +8,29 @@
 
   (async () => {
     var dom = document.getElementById("chart-container");
-
+  
     const res = await fetch("/getWordCountStats");
     const data = await res.json();
-
+  
     const words = [];
     const counts = [];
+    let totalCount = 0;
+  
     for (const d of data) {
       words.push(d.word);
       counts.push(d.counter);
+      totalCount += d.counter;
     }
-
+  
+    const percentages = counts.map(count => ((count / totalCount) * 100).toFixed(1) + "%");
+  
     var myChart = echarts.init(dom, null, {
       renderer: "canvas",
       useDirtyRect: false,
     });
     var app = {};
-
     var option;
-
+  
     option = {
       title: {
         text: "Frequency of Top 50 Words in Songs Lyrics",
@@ -40,7 +44,6 @@
           interval: 0,
           rotate: 45,
         },
-        
       },
       yAxis: {
         type: "value",
@@ -66,17 +69,22 @@
           label: {
             show: true,
             position: "top",
+            formatter: function(params) {
+              return `${params.value} \n (${percentages[params.dataIndex]})`;
+            },
+            fontSize: 10, // Smaller font size for percentages
           },
         },
       ],
     };
-
+  
     if (option && typeof option === "object") {
       myChart.setOption(option);
     }
-
+  
     window.addEventListener("resize", myChart.resize);
   })();
+  
 
   (async () => {
     const res = await fetch("/getAllWordsAndGroups");
