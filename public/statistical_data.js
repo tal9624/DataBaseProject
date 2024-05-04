@@ -33,7 +33,7 @@
   
     option = {
       title: {
-        text: "Frequency of Top 50 Words in Songs Lyrics",
+        text: "Frequency of Top 40 Words in Songs Lyrics",
         left: "center",
       },
       xAxis: {
@@ -72,7 +72,7 @@
             formatter: function(params) {
               return `${params.value} \n (${percentages[params.dataIndex]})`;
             },
-            fontSize: 10, // Smaller font size for percentages
+            fontSize: 8.3, // Smaller font size for percentages
           },
         },
       ],
@@ -213,7 +213,6 @@
         data: numOfRows,
         axisLabel: {
           interval: 0,
-          rotate: 45, // Rotate labels for better readability
         },
       },
       yAxis: {
@@ -293,7 +292,6 @@
       data: wordLength,
       axisLabel: {
         interval: 0,
-        rotate: 45,
       },
     },
     yAxis: {

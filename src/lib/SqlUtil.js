@@ -202,7 +202,7 @@ export default class SqlUtil {
             FROM words_in_songs
             GROUP BY word
             ORDER BY counter DESC
-            LIMIT 50;
+            LIMIT 40;
         `);
         res.json(data);
     } catch (err) {
@@ -812,14 +812,24 @@ importXML = async (req, res) => {
     const filePath = req.file.path;
     const data = await fs.readFile(filePath);
     let result = await xml2js.parseStringPromise(data);
-    
+    if (typeof result.Database.Groups[0].Group !== 'undefined')
     // Assuming your XML structure follows the output format of your export function
+    if (typeof result.Database.Songs[0].Song !== 'undefined')
     await processSongs(result.Database.Songs[0].Song, this.db);
+
+    if (typeof result.Database.WordsInSongs[0].WordInSong !== 'undefined')
     await processWordsInSongs(result.Database.WordsInSongs[0].WordInSong,this.db);
     // await processWordCount(result.Database.WordCounts[0].WordCount,this.db);
+    if (typeof result.Database.Groups[0].Group !== 'undefined')
     await processGroups(result.Database.Groups[0].Group,this.db);
+
+    if (typeof result.Database.WordGroups[0].WordGroup !== 'undefined')
     await processWordGroups(result.Database.WordGroups[0].WordGroup,this.db);
+
+    if (typeof result.Database.Phrases[0].Phrase !== 'undefined')
     await processPhrases(result.Database.Phrases[0].Phrase,this.db);
+
+    if (typeof result.Database.PhrasesAtSongs[0].PhraseAtSong !== 'undefined')
     await processPhrasesAtSongs(result.Database.PhrasesAtSongs[0].PhraseAtSong,this.db);
 
     // Clean up the uploaded file after processing
