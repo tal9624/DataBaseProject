@@ -30,7 +30,7 @@ CREATE TABLE words_in_songs (
     -- word_count INTEGER,
     row INTEGER,
     column INTEGER,
-    column_end INTEGER,
+    -- column_end INTEGER,
     FOREIGN KEY (song_name) REFERENCES songs (song_name)
     
 );

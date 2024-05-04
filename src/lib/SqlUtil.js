@@ -156,15 +156,14 @@ export default class SqlUtil {
         for (const index of occurrences.entries()) {
           currentMaxId += 1; // Increment ID for each new row
           const result = await this.db.run(
-            `INSERT INTO words_in_songs (word_serial_id, word, song_name, row, column, column_end)
-                     VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO words_in_songs (word_serial_id, word, song_name, row, column)
+                     VALUES (?, ?, ?, ?, ?)`,
             [
               currentMaxId,
               word,
               songName,
               index[1][0],
               index[1][1],
-              index[1][2],
             ]
           );
           lastWordSerialId = currentMaxId; // Keep track of the last used ID
@@ -430,12 +429,17 @@ export default class SqlUtil {
     const row = req.body.row;
     const column = req.body.column;
     const r = await this.db.all(
-      `SELECT word from words_in_songs where song_Name = ? and row = ? and column <= ?
-      and column_end >= ? `,
+      `SELECT word 
+       FROM words_in_songs 
+       WHERE song_Name = ? 
+       AND row = ? 
+       AND CAST( ? AS INTEGER) >= CAST(column AS INTEGER) 
+       AND CAST( ? AS INTEGER) <= CAST(column AS INTEGER) + LENGTH(word) - 1`,
       [songName, row, column, column]
     );
     res.json(r);
   };
+  
   ShowAllWordsInSongs = async (req, res) => {
     const songName = req.body.songName;
     if (songName == null) {
@@ -813,14 +817,27 @@ importXML = async (req, res) => {
     const data = await fs.readFile(filePath);
     let result = await xml2js.parseStringPromise(data);
     
+    
     // Assuming your XML structure follows the output format of your export function
+    if (typeof result.Database.Songs[0].Song !== 'undefined'){
     await processSongs(result.Database.Songs[0].Song, this.db);
+    }
+    if (typeof result.Database.WordsInSongs[0].WordInSong !== 'undefined'){
     await processWordsInSongs(result.Database.WordsInSongs[0].WordInSong,this.db);
+    }
     // await processWordCount(result.Database.WordCounts[0].WordCount,this.db);
+    if (typeof result.Database.Groups[0].Group !== 'undefined'){
     await processGroups(result.Database.Groups[0].Group,this.db);
+    }
+    if (typeof result.Database.WordGroups[0].WordGroup !== 'undefined'){
     await processWordGroups(result.Database.WordGroups[0].WordGroup,this.db);
+    }
+    if (typeof result.Database.Phrases[0].Phrase !== 'undefined'){
     await processPhrases(result.Database.Phrases[0].Phrase,this.db);
+    }
+    if (typeof result.Database.PhrasesAtSongs[0].PhraseAtSong !== 'undefined'){
     await processPhrasesAtSongs(result.Database.PhrasesAtSongs[0].PhraseAtSong,this.db);
+    }
 
     // Clean up the uploaded file after processing
     await fs.unlink(filePath);

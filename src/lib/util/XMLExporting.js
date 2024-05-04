@@ -29,7 +29,6 @@ export function convertDataToXML(data) {
                   <Word>${word.word}</Word>
                   <Row>${word.row}</Row>
                   <Column>${word.column}</Column>
-                  <ColumnEnd>${word.column_end}</ColumnEnd>
               </WordInSong>`;
   });
   xml += '</WordsInSongs>';
