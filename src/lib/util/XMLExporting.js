@@ -25,7 +25,7 @@ export function convertDataToXML(data) {
   data.wordsInSongs.forEach(word => {
       xml += `<WordInSong>
                   <WordSerialId>${word.word_serial_id}</WordSerialId>
-                  <SongName>${word.song_name}</SongName>
+                  <SongId>${word.song_serial}</SongId>
                   <Word>${word.word}</Word>
                   <Row>${word.row}</Row>
                   <Column>${word.column}</Column>

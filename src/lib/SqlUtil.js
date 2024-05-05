@@ -156,11 +156,9 @@ export default class SqlUtil {
 
   insertWords = async (req, res) => {
     const wordsMap = getWordsMap(req.body.lyrics);
-    let songName = req.body.songName;
-    const filePath = req.body.filePath;
-    if (songName == "") {
-      songName = filePath;
-    }
+    let songId = await this.db.get(
+      `SELECT MAX(song_serial) as max_id FROM songs`
+    );
 
     try {
       await this.db.run("BEGIN"); // Start a transaction
@@ -181,12 +179,12 @@ export default class SqlUtil {
         for (const index of occurrences.entries()) {
           currentMaxId += 1; // Increment ID for each new row
           const result = await this.db.run(
-            `INSERT INTO words_in_songs (word_serial_id, word, song_name, row, column, column_end)
+            `INSERT INTO words_in_songs (word_serial_id, song_serial, word, row, column, column_end)
                      VALUES (?, ?, ?, ?, ?, ?)`,
             [
               currentMaxId,
+              songId.max_id,
               word,
-              songName,
               index[1][0],
               index[1][1],
               index[1][2],
@@ -246,7 +244,9 @@ export default class SqlUtil {
   getAllSongAndLyrics = async (req, res) => {
     // Fetch all words, ordered by song, row, and column
     const words = await this.db.all(
-      "SELECT song_name, word, row FROM words_in_songs ORDER BY song_name, row, column"
+      `SELECT song_name, word, row
+       FROM words_in_songs NATURAL JOIN songs
+       ORDER BY song_name, row, column`
     );
 
     const data = {};
@@ -293,8 +293,8 @@ export default class SqlUtil {
         data[currentSong] = paragraphText;
       }
     }
-
     res.json(data);
+  
   };
 
   addGroup = async (req, res) => {
@@ -391,16 +391,17 @@ export default class SqlUtil {
     };
     try {
       const matchSongs = await this.db.all(query, params);
+     
       for (const song of matchSongs) {
         // Fetch all words for a song, ordered by their row and column positions
         const r = await this.db.all(
           `SELECT word, row
-          FROM words_in_songs
+          FROM words_in_songs NATURAL JOIN songs
           WHERE song_name = ?
           ORDER BY row ASC, column ASC`,
           [song.song_name]
         );
-
+        console.log(r);
         let lyrics = "";
         let previousRow = r[0] ? r[0].row : null;
 
@@ -454,8 +455,10 @@ export default class SqlUtil {
     const songName = req.body.songName;
     const row = req.body.row;
     const column = req.body.column;
+
     const r = await this.db.all(
-      `SELECT word from words_in_songs where song_Name = ? and row = ? and column <= ?
+      `SELECT word from words_in_songs NATURAL JOIN songs 
+      where song_Name = ? and row = ? and column <= ?
       and column_end >= ? `,
       [songName, row, column, column]
     );
@@ -465,13 +468,15 @@ export default class SqlUtil {
     const songName = req.body.songName;
     if (songName == null) {
       const r = await this.db.all(
-        "SELECT DISTINCT song_name,word from words_in_songs"
+        `SELECT DISTINCT song_name,word from words_in_songs 
+        NATURAL JOIN songs`
       );
       res.json(r);
     }
     if (songName != null) {
       const r = await this.db.all(
-        "SELECT DISTINCT song_name,word from words_in_songs where song_Name = ? ",
+        `SELECT DISTINCT song_name,word from words_in_songs
+         NATURAL JOIN songs where song_Name = ? `,
         [songName]
       );
       res.json(r);
@@ -486,7 +491,7 @@ export default class SqlUtil {
     const words = await this.db.all(
         `
         SELECT word, row
-        FROM words_in_songs
+        FROM words_in_songs NATURAL JOIN songs
         WHERE song_name = ?
         ORDER BY row, column
         `,
@@ -541,7 +546,7 @@ export default class SqlUtil {
     const r = await this.db.all(
       `
       SELECT song_name,row,column
-      FROM words_in_songs
+      FROM words_in_songs NATURAL JOIN songs
       WHERE (
       word = ?   
       )`,
@@ -555,7 +560,7 @@ export default class SqlUtil {
     const r = await this.db.all(
       `
       SELECT song_name,row
-      FROM words_in_songs
+      FROM words_in_songs NATURAL JOIN songs
       WHERE 
       (
        word = ? 
@@ -573,13 +578,13 @@ export default class SqlUtil {
       `
       SELECT 
       word_groups.group_name,
-      words_in_songs.song_name,
+      songs.song_name,
       words_in_songs.word,
       words_in_songs.row,
       words_in_songs.column
   FROM 
       (words_in_songs, 
-      word_groups)
+      word_groups) NATURAL JOIN songs
   WHERE 
       word_groups.group_name = ? AND LOWER(words_in_songs.word) = LOWER(word_groups.word)
   `,
@@ -599,7 +604,7 @@ export default class SqlUtil {
     const words = await this.db.all(
       `
         SELECT word, row
-        FROM words_in_songs
+        FROM words_in_songs NATURAL JOIN songs
         WHERE song_name = ? 
         ORDER BY row, column
         `,
@@ -698,7 +703,7 @@ export default class SqlUtil {
         }
 
         const words = await this.db.all(
-            `SELECT word, row FROM words_in_songs WHERE song_name = ? ORDER BY row, column`,
+            `SELECT word, row FROM words_in_songs NATURAL JOIN songs WHERE song_name = ? ORDER BY row, column`,
             [song.song_name]
         );
 
@@ -747,7 +752,7 @@ export default class SqlUtil {
     const r = await this.db.all(
       `
       SELECT DISTINCT song_name, row
-      FROM words_in_songs
+      FROM words_in_songs NATURAL JOIN songs
       ORDER BY song_name ,row;
 `
     );
@@ -837,11 +842,9 @@ importXML = async (req, res) => {
     const filePath = req.file.path;
     const data = await fs.readFile(filePath);
     let result = await xml2js.parseStringPromise(data);
-    if (typeof result.Database.Groups[0].Group !== 'undefined')
     // Assuming your XML structure follows the output format of your export function
     if (typeof result.Database.Songs[0].Song !== 'undefined')
     await processSongs(result.Database.Songs[0].Song, this.db);
-
     if (typeof result.Database.WordsInSongs[0].WordInSong !== 'undefined')
     await processWordsInSongs(result.Database.WordsInSongs[0].WordInSong,this.db);
     // await processWordCount(result.Database.WordCounts[0].WordCount,this.db);

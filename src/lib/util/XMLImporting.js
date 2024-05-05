@@ -40,11 +40,11 @@ export async function processSongs(songs, db) {
 
 export async function processWordsInSongs(wordsInSongs, db) {
     try {
-        const insert = await db.prepare(`INSERT INTO words_in_songs (word_serial_id, song_name, word, row, column, column_end) VALUES (?, ?, ?, ?, ?, ?)`);
+        const insert = await db.prepare(`INSERT INTO words_in_songs (word_serial_id, song_serial, word, row, column, column_end) VALUES (?, ?, ?, ?, ?, ?)`);
 
         for (const wordInSong of wordsInSongs) {
             const WordSerialId = wordInSong.WordSerialId[0];
-            const SongName = wordInSong.SongName[0];
+            const SongId = wordInSong.SongId[0];
             const Word = wordInSong.Word[0];
             const Row = wordInSong.Row[0];
             const Column = wordInSong.Column[0];
@@ -52,7 +52,7 @@ export async function processWordsInSongs(wordsInSongs, db) {
 
             await insert.run(
                 WordSerialId,
-                SongName,
+                SongId,
                 Word,
                 Row,
                 Column,
