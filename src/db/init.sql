@@ -21,31 +21,23 @@ CREATE TABLE songs (
     youtube_path VARCHAR(255)
 );
 
-
+delete from  songs;
+delete from words_in_songs;
+delete from groups;
+delete from phrases;
+delete from phrases_at_songs;
+delete from word_groups;
 
 CREATE TABLE words_in_songs (
-    word_serial_id INTEGER PRIMARY KEY,
-    song_name VARCHAR(255),
+    word_serial_id INTEGER,
+    song_serial INTEGER,
     word VARCHAR(255),
-    -- word_count INTEGER,
     row INTEGER,
     column INTEGER,
     column_end INTEGER,
-    FOREIGN KEY (song_name) REFERENCES songs (song_name)
-    
+    PRIMARY KEY (word_serial_id, song_serial),
+    FOREIGN KEY (song_serial) REFERENCES songs (song_serial)
 );
-
-
--- CREATE TABLE word_count (
---     word_serial_id INTEGER PRIMARY KEY,
---     word VARCHAR(255) UNIQUE,
---     counter INTEGER,
---     word_length INTEGER,  
---     FOREIGN KEY (word_serial_id) REFERENCES words_in_songs (word_serial_id)
--- );
-
-
-
 
 CREATE TABLE word_groups (
     group_name VARCHAR(255),
