@@ -129,6 +129,31 @@ export default class SqlUtil {
     }
   };
 
+  clearDatabase = async () => {
+    try {
+      // Delete all rows from the tables
+      await this.db.run("DELETE FROM songs");
+      await this.db.run("DELETE FROM words_in_songs");
+      await this.db.run("DELETE FROM word_groups");
+      await this.db.run("DELETE FROM groups");
+      await this.db.run("DELETE FROM phrases");
+      await this.db.run("DELETE FROM phrases_at_songs");
+
+      // Reset auto-increment counters if necessary
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='songs'");
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='words_in_songs'");
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='word_groups'");
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='groups'");
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='phrases'");
+      await this.db.run("DELETE FROM sqlite_sequence WHERE name='phrases_at_songs'");
+
+      return { message: "Database emptied successfully" };
+    } catch (error) {
+      console.error("Error emptying database:", error);
+      throw new Error("Failed to empty database");
+    }
+  };
+
   insertWords = async (req, res) => {
     const wordsMap = getWordsMap(req.body.lyrics);
     let songName = req.body.songName;

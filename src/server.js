@@ -24,6 +24,7 @@ app.get("/getLinesInParagraphStats", sqlUtil.getLinesInParagraphStats);
 app.get("/getCountOfWordLengths", sqlUtil.getCountOfWordLengths);
 app.get("/getCountOfAllWords", sqlUtil.getCountOfAllWords);
 app.get("/exportXML", sqlUtil.exportXML);
+app.get('/clearDatabase', sqlUtil.clearDatabase);
 
 app.post("/getSongByStructData", sqlUtil.getSongByStructData);
 app.post("/postSong", sqlUtil.postSong);
@@ -40,6 +41,7 @@ app.post("/IndexesForGroupWords",sqlUtil.IndexesForGroupWords);
 app.post("/addPhrase",sqlUtil.addPhrase);
 app.post("/showPhrase",sqlUtil.showPhrase);
 app.post('/importXML', upload.single('xmlFile'), sqlUtil.importXML);
+
 
 
 app.listen(PORT, () => {

@@ -333,3 +333,18 @@
 
   window.addEventListener("resize", myChart.resize);
 })();
+
+async function clearDatabase() {
+  try {
+    const response = await fetch('/clearDatabase'); // Assuming your server route is '/clearDatabase'
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log(result.message);
+    // You can handle the success message here
+  } catch (error) {
+    console.error("Error calling clearDatabase:", error);
+    // You can handle the error here
+  }
+}
