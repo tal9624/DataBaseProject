@@ -89,7 +89,6 @@ export default class SqlUtil {
   insertSong = async (req, res) => {
     let {
       songName,
-      filePath,
       dateOfWriting,
       writerName,
       source,
@@ -98,18 +97,16 @@ export default class SqlUtil {
       releaseDate,
       youtubePath,
     } = req.body;
-    if (songName == "") songName = filePath;
 
     const query = `
             INSERT INTO songs 
-            (song_name, file_path, date_of_writing, writer_name, source, album_name, artist_name, release_date, youtube_path) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+            (song_name, date_of_writing, writer_name, source, album_name, artist_name, release_date, youtube_path) 
+            VALUES (?,  ?, ?, ?, ?, ?, ?, ?);
         `;
 
     try {
       await this.db.run(query, [
         songName,
-        filePath,
         dateOfWriting,
         writerName,
         source,
@@ -837,7 +834,7 @@ importXML = async (req, res) => {
     return res.status(400).json({ error: 'No file uploaded.' });
   }
   const filePath = req.file.path;
-  console.log(`File uploaded at ${filePath}`);
+  
   try {
     const filePath = req.file.path;
     const data = await fs.readFile(filePath);
@@ -868,6 +865,7 @@ importXML = async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({ error: 'Failed to process XML file.', details: error.message });
   }
+  console.log(`File uploaded at ${filePath}`);
 };
 
 

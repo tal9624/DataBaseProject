@@ -2,12 +2,11 @@ import openDb from './dbConnection.js';
 
 export async function processSongs(songs, db) {
     try {
-        const insert = await db.prepare(`INSERT INTO songs (song_serial, song_name, file_path, date_of_writing, writer_name, source, album_name, artist_name, release_date, youtube_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+        const insert = await db.prepare(`INSERT INTO songs (song_serial, song_name, date_of_writing, writer_name, source, album_name, artist_name, release_date, youtube_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
         for (const song of songs) {
             const SongSerial = song.SongSerial[0];
             const SongName = song.SongName[0];
-            const FilePath = song.FilePath[0];
             const DateOfWriting = song.DateOfWriting[0];
             const WriterName = song.WriterName[0];
             const Source = song.Source[0];
@@ -19,7 +18,6 @@ export async function processSongs(songs, db) {
             await insert.run(
                 SongSerial,
                 SongName,
-                FilePath,
                 DateOfWriting,
                 WriterName,
                 Source,

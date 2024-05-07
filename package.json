@@ -9,20 +9,18 @@
     "scrap": "npx playwright test --project=chromium"
   },
   "keywords": [],
-  "author": "",
+  "author": "tal-mizrahi-din-cohen",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
-    "js2xmlparser": "^5.0.0",
-    "multer": "^1.4.5-lts.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "xml-js": "^1.6.11",
-    "xml2js": "^0.6.2"
+    "js2xmlparser": "^5.0.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.0",
     "@playwright/test": "^1.43.1",
-    "@types/node": "^20.12.7",
-    "nodemon": "^3.1.0"
+    "@types/node": "^20.12.7"
   }
 }

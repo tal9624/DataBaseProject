@@ -136,7 +136,7 @@ function submitShowTextFile() {
     //   var blob = new Blob([text], { type: "text/plain" });
 
     //   // Create a link and trigger the download
-    //   var link = document.createElement("a");
+    //   var link = document.createElement("a"); tal mizrahi din cohen
     //   link.download = filename;
     //   link.href = window.URL.createObjectURL(blob);
     //   link.style.display = "none";

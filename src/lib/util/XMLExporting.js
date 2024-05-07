@@ -8,7 +8,6 @@ export function convertDataToXML(data) {
       xml += `<Song>
                   <SongSerial>${song.song_serial}</SongSerial>
                   <SongName>${song.song_name}</SongName>
-                  <FilePath>${song.file_path}</FilePath>
                   <DateOfWriting>${song.date_of_writing}</DateOfWriting>
                   <WriterName>${song.writer_name}</WriterName>
                   <Source>${song.source}</Source>
